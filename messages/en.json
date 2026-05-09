@@ -1,0 +1,101 @@
+{
+  "seo": {
+    "title": "Daniel Gómez | FullStack Developer",
+    "description": "FullStack Developer specialized in React, Next.js, and FastAPI. Building fast, modern, and scalable web experiences.",
+    "openGraphDescription": "FullStack Developer specialized in React, Next.js, and FastAPI."
+  },
+  "nav": {
+    "about": "About",
+    "skills": "Skills",
+    "projects": "Projects",
+    "experience": "Experience",
+    "contact": "Contact"
+  },
+  "hero": {
+    "greeting": "Hi, I'm",
+    "role": "FullStack Developer",
+    "tagline": "Building fast, modern and scalable web experiences with",
+    "cta_projects": "View Projects",
+    "cta_contact": "Contact Me"
+  },
+  "about": {
+    "label": "Who I am",
+    "title": "About",
+    "title_highlight": "Me",
+    "bio_1": "I'm a <strong>FullStack Developer</strong> with a strong focus on the frontend. I care deeply about the intersection of engineering and design — building interfaces that are not only functional, but fast, accessible, and visually compelling.",
+    "bio_2": "My main stack revolves around <accent>React</accent> and <accent>Next.js</accent> on the frontend, and <accent>FastAPI</accent> with <accent>Python</accent> on the backend. I enjoy working across the full stack — from API design and database modeling to animations and micro-interactions.",
+    "bio_3": "When I'm not coding, I'm exploring UI/UX trends, contributing to side projects, or diving into anything related to web performance and developer experience.",
+    "core_tech": "Core technologies",
+    "open_to_work": "Open to work",
+    "available": "Available for new opportunities",
+    "pillars": {
+      "clean_title": "Clean Code",
+      "clean_desc": "I write readable, maintainable code that scales — not just code that works.",
+      "ownership_title": "Full Ownership",
+      "ownership_desc": "From database design to pixel-perfect UI, I own every layer of the stack.",
+      "perf_title": "Performance First",
+      "perf_desc": "I obsess over load times, Lighthouse scores, and smooth interactions."
+    }
+  },
+  "skills": {
+    "label": "What I work with",
+    "title": "Skills &",
+    "title_highlight": "Technologies",
+    "filter_all": "All",
+    "filter_frontend": "Frontend",
+    "filter_backend": "Backend",
+    "filter_database": "Database",
+    "filter_tools": "Tools"
+  },
+  "experience": {
+    "label": "My journey",
+    "title": "Experience &",
+    "title_highlight": "Education",
+    "subtitle": "Over 1.5 years building real-world software — continuously growing and aiming for Software Architecture.",
+    "work_label": "Work",
+    "work_title": "Professional Experience",
+    "edu_label": "Education",
+    "edu_title": "Academic Background",
+    "current": "Current",
+    "items": {
+      "exp-1": {
+        "role": "FullStack Developer",
+        "description": "Building and maintaining full-stack web applications. Responsible for frontend architecture, API design and database modeling. Focused on delivering performant, accessible and visually polished user interfaces."
+      },
+      "edu-1": {
+        "role": "Software Engineering",
+        "description": "6th semester. Deepening knowledge in software architecture, algorithms, data structures and systems design. Aspiring to pursue a Master's in Software Architecture."
+      },
+      "edu-2": {
+        "role": "Technology in Software Analysis and Development",
+        "description": "Completed the Technologist program in Software Analysis and Development. Acquired solid foundations in programming, databases and software engineering practices."
+      },
+      "edu-3": {
+        "role": "Technical Program in Systems",
+        "description": "Technical certification covering computer fundamentals, web development basics, networking essentials and software maintenance."
+      }
+    }
+  },
+  "contact": {
+    "label": "Get in touch",
+    "title": "Let's",
+    "title_highlight": "Work Together",
+    "subtitle": "I'm open to new opportunities, collaborations and interesting projects. Whether you have a question or just want to say hi — my inbox is always open.",
+    "name_label": "Name",
+    "name_placeholder": "Your name",
+    "email_label": "Email",
+    "email_placeholder": "your@email.com",
+    "message_label": "Message",
+    "message_placeholder": "Tell me about your project or idea...",
+    "send": "Send Message",
+    "available": "Available for work",
+    "available_desc": "Currently open to full-time roles, freelance projects and interesting collaborations.",
+    "find_me": "Find me on",
+    "github_desc": "See my code",
+    "linkedin_desc": "Let's connect",
+    "email_desc": "Direct message"
+  },
+  "footer": {
+    "built": "Designed & built with care."
+  }
+}
