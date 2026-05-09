@@ -1,0 +1,101 @@
+{
+  "seo": {
+    "title": "Daniel Gómez | Desarrollador FullStack",
+    "description": "Desarrollador FullStack especializado en React, Next.js y FastAPI. Construyendo experiencias web rápidas, modernas y escalables.",
+    "openGraphDescription": "Desarrollador FullStack especializado en React, Next.js y FastAPI."
+  },
+  "nav": {
+    "about": "Sobre mí",
+    "skills": "Habilidades",
+    "projects": "Proyectos",
+    "experience": "Experiencia",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "greeting": "Hola, soy",
+    "role": "Desarrollador FullStack",
+    "tagline": "Construyendo experiencias web rápidas, modernas y escalables con",
+    "cta_projects": "Ver Proyectos",
+    "cta_contact": "Contactarme"
+  },
+  "about": {
+    "label": "Quién soy",
+    "title": "Sobre",
+    "title_highlight": "Mí",
+    "bio_1": "Soy <strong>Desarrollador FullStack</strong>, aunque disfruto más el frontend. Me gusta unir la parte técnica con el diseño y crear interfaces que se sientan rápidas, claras y agradables para quien las usa.",
+    "bio_2": "Trabajo principalmente con <accent>JavaScript</accent> y <accent>React</accent> en el frontend, y con <accent>Python</accent> y <accent>FastAPI</accent> en el backend. Me gusta involucrarme en todo el proceso: desde pensar cómo se estructuran las APIs y las bases de datos, hasta pulir los detalles visuales como animaciones y pequeñas interacciones que hacen la diferencia.",
+    "bio_3": "Cuando no estoy programando, exploro tendencias de UI/UX, contribuyo a proyectos propios o profundizo en todo lo relacionado con rendimiento web y experiencia de desarrollo.",
+    "core_tech": "Tecnologías principales",
+    "open_to_work": "Disponible para trabajar",
+    "available": "Disponible para nuevas oportunidades",
+    "pillars": {
+      "clean_title": "Código Limpio",
+      "clean_desc": "Me gusta escribir código claro y fácil de entender, pensando en que pueda mantenerse y crecer con el tiempo.",
+      "ownership_title": "Responsabilidad Total",
+      "ownership_desc": "Me involucro en todo el proceso, desde cómo se estructura la base de datos hasta los detalles finales de la interfaz.",
+      "perf_title": "Rendimiento Primero",
+      "perf_desc": "Me enfoco en que todo cargue rápido y se sienta fluido."
+    }
+  },
+  "skills": {
+    "label": "Con qué trabajo",
+    "title": "Habilidades y",
+    "title_highlight": "Tecnologías",
+    "filter_all": "Todas",
+    "filter_frontend": "Frontend",
+    "filter_backend": "Backend",
+    "filter_database": "Base de Datos",
+    "filter_tools": "Herramientas"
+  },
+  "experience": {
+    "label": "Mi trayectoria",
+    "title": "Experiencia y",
+    "title_highlight": "Educación",
+    "subtitle": "Más de 1 año y medio construyendo software real, aprendiendo constantemente y con el objetivo de especializarme en Arquitectura de Software.",
+    "work_label": "Laboral",
+    "work_title": "Experiencia Profesional",
+    "edu_label": "Educación",
+    "edu_title": "Formación Académica",
+    "current": "Actual",
+    "items": {
+      "exp-1": {
+        "role": "Desarrollador FullStack",
+        "description": "Construcción y mantenimiento de aplicaciones web full-stack. Responsable de la arquitectura frontend, diseño de APIs y modelado de bases de datos. Enfocado en entregar interfaces de usuario eficientes, accesibles y visualmente pulidas."
+      },
+      "edu-1": {
+        "role": "Ingeniería de Software",
+        "description": "Semestre 6. Profundizando conocimientos en arquitectura de software, algoritmos, estructuras de datos y diseño de sistemas. Con aspiraciones de cursar una Maestría en Arquitectura de Software."
+      },
+      "edu-2": {
+        "role": "Tecnología en Análisis y Desarrollo de Software",
+        "description": "Completé el programa de Tecnólogo en Análisis y Desarrollo de Software. Adquirí bases sólidas en programación, bases de datos y prácticas de ingeniería de software."
+      },
+      "edu-3": {
+        "role": "Técnico en Sistemas",
+        "description": "Certificación técnica que cubre fundamentos de computación, desarrollo web básico, fundamentos de redes y mantenimiento de software."
+      }
+    }
+  },
+  "contact": {
+    "label": "Hablemos",
+    "title": "Trabajemos",
+    "title_highlight": "Juntos",
+    "subtitle": "Estoy abierto a nuevas oportunidades, colaboraciones y proyectos interesantes. Si tienes una pregunta o solo quieres saludar — mi bandeja siempre está abierta.",
+    "name_label": "Nombre",
+    "name_placeholder": "Tu nombre",
+    "email_label": "Correo",
+    "email_placeholder": "tu@correo.com",
+    "message_label": "Mensaje",
+    "message_placeholder": "Cuéntame sobre tu proyecto o idea...",
+    "send": "Enviar Mensaje",
+    "available": "Disponible para trabajar",
+    "available_desc": "Abierto a roles de tiempo completo, proyectos freelance y colaboraciones interesantes.",
+    "find_me": "Encuéntrame en",
+    "github_desc": "Ver mi código",
+    "linkedin_desc": "Conectemos",
+    "email_desc": "Mensaje directo"
+  },
+  "footer": {
+    "built": "Diseñado y construido con cuidado."
+  }
+}
