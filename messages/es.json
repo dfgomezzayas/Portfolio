@@ -93,7 +93,12 @@
     "find_me": "Encuéntrame en",
     "github_desc": "Ver mi código",
     "linkedin_desc": "Conectemos",
-    "email_desc": "Mensaje directo"
+    "email_desc": "Mensaje directo",
+    "name_error_short": "El nombre debe tener al menos 2 caracteres",
+    "name_error_long": "El nombre debe tener menos de 50 caracteres",
+    "email_error_invalid": "Dirección de correo inválida",
+    "message_error_short": "El mensaje debe tener al menos 10 caracteres",
+    "message_error_long": "El mensaje debe tener menos de 1000 caracteres"
   },
   "footer": {
     "built": "Diseñado y construido con cuidado."

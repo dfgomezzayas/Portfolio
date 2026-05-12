@@ -12,6 +12,7 @@ This is my personal portfolio built with **Next.js**, focused on performance, sc
 - **Styling:** Tailwind CSS
 - **Backend (separate projects):** FastAPI
 - **Deployment:** Vercel (recommended)
+- **Form validation:** Zod
 
 ---
 

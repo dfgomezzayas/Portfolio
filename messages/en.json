@@ -93,7 +93,12 @@
     "find_me": "Find me on",
     "github_desc": "See my code",
     "linkedin_desc": "Let's connect",
-    "email_desc": "Direct message"
+    "email_desc": "Direct message",
+    "name_error_short": "Name must be at least 2 characters",
+    "name_error_long": "Name must be less than 50 characters",
+    "email_error_invalid": "Invalid email address",
+    "message_error_short": "Message must be at least 10 characters",
+    "message_error_long": "Message must be less than 1000 characters"
   },
   "footer": {
     "built": "Designed & built with care."

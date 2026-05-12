@@ -11,7 +11,7 @@ import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 const NAV_KEYS = [
   { key: "about", href: "#about" },
   { key: "skills", href: "#skills" },
-  { key: "projects", href: "#projects" },
+  // { key: "projects", href: "#projects" },
   { key: "experience", href: "#experience" },
   { key: "contact", href: "#contact" },
 ];
@@ -39,13 +39,13 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "section-container fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
-          ? "bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200/50 dark:border-zinc-800/50"
-          : "bg-transparent",
+          ? "top-2 rounded-xl bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/50"
+          : "bg-transparent border-transparent",
       )}
     >
-      <nav className="section-container h-16 flex items-center justify-between">
+      <nav className="h-16 flex items-center justify-between">
         {/* Logo */}
         <motion.button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
