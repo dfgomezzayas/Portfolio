@@ -1,59 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import type { Easing } from "framer-motion";
-import {
-  FiGithub,
-  FiLinkedin,
-  FiMail,
-  FiSend,
-  FiUser,
-  FiMessageSquare,
-} from "react-icons/fi";
+import { FiSend, FiUser, FiMessageSquare, FiMail } from "react-icons/fi";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import * as z from "zod";
+import { sendContactEmail } from "@/app/actions/sendEmail";
+import { contactSocialLinks } from "@/content/contact";
+import { fadeUp, STAGGER } from "@/lib/animations";
 
-const EASE: Easing = [0.25, 0.1, 0.25, 1];
-
-const SOCIAL = [
-  {
-    icon: FiGithub,
-    label: "GitHub",
-    href: "https://github.com/dfgomezzayas",
-    descKey: "github_desc",
-    color:
-      "hover:border-zinc-400 dark:hover:border-zinc-500 hover:text-zinc-900 dark:hover:text-white",
-  },
-  {
-    icon: FiLinkedin,
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/daniel-fernando-g%C3%B3mez-zayas-43a049263/",
-    descKey: "linkedin_desc",
-    color: "hover:border-blue-500 hover:text-blue-500",
-  },
-  {
-    icon: FiMail,
-    label: "Email",
-    href: "mailto:dfgomezzayas@gmail.com",
-    descKey: "email_desc",
-    color: "hover:border-accent-500 hover:text-accent-500",
-  },
-] as const;
-
-function fadeUp(delay: number) {
-  return {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true as const },
-    transition: { duration: 0.45, delay, ease: EASE },
-  };
-}
+// Persisted client-side so a page reload can't be used to send another
+// message — this is the actual "one message, ever" UX for real visitors.
+// The server-side rate limit (lib/rate-limit.ts) is the backstop for anyone
+// who bypasses this (clears storage, calls the Server Action directly).
+const ALREADY_SENT_KEY = "contact_form_sent";
 
 export default function Contact() {
   const t = useTranslations("contact");
+  const [hasSentBefore, setHasSentBefore] = useState(false);
+
+  useEffect(() => {
+    // localStorage doesn't exist during SSR, so this can only be read
+    // client-side after mount — the standard reason this pattern needs an
+    // effect at all.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHasSentBefore(localStorage.getItem(ALREADY_SENT_KEY) === "true");
+  }, []);
+
   const userSchema = z.object({
     name: z
       .string()
@@ -64,6 +39,8 @@ export default function Contact() {
       .string()
       .min(10, t("message_error_short"))
       .max(1000, t("message_error_long")),
+    // Honeypot: hidden from real users, only bots fill every input they find.
+    company: z.string().optional(),
   });
 
   const {
@@ -72,15 +49,22 @@ export default function Contact() {
     focused,
     isSubmitting,
     submitted,
+    submitError,
     handleChange,
     handleBlur,
     handleSubmit,
     setFocused,
   } = useFormValidation({
     schema: userSchema,
-    initialValues: { name: "", email: "", message: "" },
+    initialValues: { name: "", email: "", message: "", company: "" },
     onSubmit: async (data) => {
-      console.log("Form valid:", data);
+      if (hasSentBefore) return;
+      const result = await sendContactEmail(data);
+      if (!result.success) throw new Error(result.error);
+    },
+    onSubmitSuccess: () => {
+      localStorage.setItem(ALREADY_SENT_KEY, "true");
+      setHasSentBefore(true);
     },
   });
 
@@ -105,11 +89,11 @@ export default function Contact() {
           <motion.p className="section-label mb-3" {...fadeUp(0)}>
             {t("label")}
           </motion.p>
-          <motion.h2 className="section-title mb-4" {...fadeUp(0.1)}>
+          <motion.h2 className="section-title mb-4" {...fadeUp(STAGGER)}>
             {t("title")}{" "}
             <span className="gradient-text">{t("title_highlight")}</span>
           </motion.h2>
-          <motion.p className="section-subtitle" {...fadeUp(0.18)}>
+          <motion.p className="section-subtitle" {...fadeUp(STAGGER * 2)}>
             {t("subtitle")}
           </motion.p>
         </div>
@@ -119,6 +103,18 @@ export default function Contact() {
           {/* Left — form (3 cols) */}
           <motion.div className="lg:col-span-3" {...fadeUp(0.25)}>
             <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              {/* Honeypot — hidden from real users, catches basic bots */}
+              <input
+                type="text"
+                name="company"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[9999px] w-px h-px opacity-0"
+                value={formState.company}
+                onChange={handleChange}
+              />
+
               {/* Name */}
               <div className="relative">
                 <label
@@ -268,20 +264,22 @@ export default function Contact() {
               {/* Submit */}
               <motion.button
                 type="submit"
-                disabled={isSubmitting || Object.keys(errors).length > 0}
+                disabled={
+                  hasSentBefore || isSubmitting || Object.keys(errors).length > 0
+                }
                 whileHover={
-                  !isSubmitting && Object.keys(errors).length === 0
+                  !hasSentBefore && !isSubmitting && Object.keys(errors).length === 0
                     ? { scale: 1.02 }
                     : {}
                 }
                 whileTap={
-                  !isSubmitting && Object.keys(errors).length === 0
+                  !hasSentBefore && !isSubmitting && Object.keys(errors).length === 0
                     ? { scale: 0.97 }
                     : {}
                 }
                 className={cn(
                   "cursor-pointer w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-white font-medium text-sm transition-all duration-200",
-                  isSubmitting || Object.keys(errors).length > 0
+                  hasSentBefore || isSubmitting || Object.keys(errors).length > 0
                     ? "bg-zinc-400 dark:bg-zinc-700 cursor-not-allowed opacity-60"
                     : "bg-accent-600 hover:bg-accent-500 glow-accent-sm",
                 )}
@@ -331,6 +329,20 @@ export default function Contact() {
                   </>
                 )}
               </motion.button>
+
+              {submitError && (
+                <p className="text-xs text-red-500 text-center" role="alert">
+                  {submitError === "rate_limited"
+                    ? t("submit_error_rate_limited")
+                    : t("submit_error")}
+                </p>
+              )}
+
+              {hasSentBefore && !submitted && (
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 text-center">
+                  {t("already_sent")}
+                </p>
+              )}
             </form>
           </motion.div>
 
@@ -357,7 +369,8 @@ export default function Contact() {
               <p className="text-xs font-mono text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
                 {t("find_me")}
               </p>
-              {SOCIAL.map(({ icon: Icon, label, href, descKey, color }) => (
+              {contactSocialLinks.map(
+                ({ icon: Icon, label, href, descKey, color }) => (
                 <motion.a
                   key={label}
                   href={href}

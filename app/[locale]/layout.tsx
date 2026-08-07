@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -35,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isEs = locale === "es";
 
   return {
-    metadataBase: new URL("https://dfgz.dev"),
+    metadataBase: new URL("https://daniel-gomez.dev"),
     title: {
       default: t("title"),
       template: "%s | Daniel Gómez",
@@ -53,36 +55,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     authors: [{ name: "Daniel Gómez" }],
     creator: "Daniel Gómez",
     alternates: {
-      canonical: `https://dfgz.dev/${locale}`,
+      canonical: `https://daniel-gomez.dev/${locale}`,
       languages: {
-        "en-US": "https://dfgz.dev/en",
-        "es-ES": "https://dfgz.dev/es",
+        "en-US": "https://daniel-gomez.dev/en",
+        "es-ES": "https://daniel-gomez.dev/es",
       },
     },
     openGraph: {
       type: "website",
       locale: isEs ? "es_ES" : "en_US",
       alternateLocale: isEs ? "en_US" : "es_ES",
-      url: `https://dfgz.dev/${locale}`,
+      url: `https://daniel-gomez.dev/${locale}`,
       title: "Daniel Gómez | FullStack Developer",
       description: t("openGraphDescription"),
       siteName: "Daniel Gómez",
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-        },
-      ],
+      // Image is generated automatically by app/[locale]/opengraph-image.tsx
     },
-    // twitter: {
-    //   card: "summary_large_image",
-    //   title: "Daniel Gómez | FullStack Developer",
-    //   description: isEs
-    //     ? "FullStack Developer especializado en React, Next.js y FastAPI."
-    //     : "FullStack Developer specializing in React, Next.js and FastAPI.",
-    //   creator: "@yourtwitterhandle",
-    // },
+    twitter: {
+      card: "summary_large_image",
+      title: "Daniel Gómez | FullStack Developer",
+      description: t("openGraphDescription"),
+    },
     robots: {
       index: true,
       follow: true,
@@ -131,6 +124,8 @@ export default async function LocaleLayout({ children, params }: Props) {
             </div>
           </ThemeProvider>
         </NextIntlClientProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -19,6 +19,7 @@ export function useFormValidation<T extends Record<string, unknown>>({
   const [focused, setFocused] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validateField = useCallback(
     (name: string, value: unknown): string | undefined => {
@@ -74,6 +75,7 @@ export function useFormValidation<T extends Record<string, unknown>>({
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setIsSubmitting(true);
+      setSubmitError(null);
 
       try {
         const result = schema.parse(formState);
@@ -95,6 +97,10 @@ export function useFormValidation<T extends Record<string, unknown>>({
             }
           });
           setErrors(newErrors);
+        } else {
+          setSubmitError(
+            error instanceof Error ? error.message : "submit_failed",
+          );
         }
       } finally {
         setIsSubmitting(false);
@@ -112,6 +118,7 @@ export function useFormValidation<T extends Record<string, unknown>>({
     setFocused,
     isSubmitting,
     submitted,
+    submitError,
     handleChange,
     handleBlur,
     handleSubmit,

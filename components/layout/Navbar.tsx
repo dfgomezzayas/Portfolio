@@ -7,14 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiSun, HiMoon, HiBars3, HiXMark } from "react-icons/hi2";
 import { cn } from "@/lib/utils";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
-
-const NAV_KEYS = [
-  { key: "about", href: "#about" },
-  { key: "skills", href: "#skills" },
-  // { key: "projects", href: "#projects" },
-  { key: "experience", href: "#experience" },
-  { key: "contact", href: "#contact" },
-];
+import { sections } from "@/content/sections";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,8 +17,16 @@ export default function Navbar() {
   const t = useTranslations("nav");
 
   useEffect(() => {
+    // Hydration-safe "mounted" flag: theme/locale-dependent UI (below) must
+    // render identically on server and first client paint, then switch on
+    // the next tick to avoid a hydration mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    handleScroll(); // catch scroll position already restored by the browser on reload
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -40,12 +41,17 @@ export default function Navbar() {
     <header
       className={cn(
         "section-container fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled
-          ? "top-2 rounded-xl bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/50"
-          : "bg-transparent border-transparent",
+        isScrolled ? "top-2" : "",
       )}
     >
-      <nav className="h-16 flex items-center justify-between">
+      <nav
+        className={cn(
+          "h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8",
+          isScrolled
+            ? "rounded-xl bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/50"
+            : "bg-transparent border-transparent",
+        )}
+      >
         {/* Logo */}
         <motion.button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -61,14 +67,14 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <ul className="hidden md:flex items-center gap-8">
-          {NAV_KEYS.map((link) => (
-            <li key={link.href}>
+          {sections.map((section) => (
+            <li key={section.href}>
               <button
-                key={link.key}
-                onClick={() => handleNavClick(link.href)}
+                key={section.key}
+                onClick={() => handleNavClick(section.href)}
                 className="cursor-pointer text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent-500 dark:hover:text-accent-400 transition-colors duration-200"
               >
-                {t(link.key)}
+                {t(section.key)}
               </button>
             </li>
           ))}
@@ -123,18 +129,18 @@ export default function Navbar() {
             className="md:hidden overflow-hidden bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-200/50 dark:border-zinc-800/50"
           >
             <ul className="section-container py-4 flex flex-col gap-1">
-              {NAV_KEYS.map((link, i) => (
+              {sections.map((section, i) => (
                 <motion.li
-                  key={link.href}
+                  key={section.href}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
                 >
                   <button
-                    onClick={() => handleNavClick(link.href)}
+                    onClick={() => handleNavClick(section.href)}
                     className="cursor-pointer w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent-500 dark:hover:text-accent-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all duration-200"
                   >
-                    {t(link.key)}
+                    {t(section.key)}
                   </button>
                 </motion.li>
               ))}

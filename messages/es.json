@@ -64,7 +64,7 @@
       },
       "edu-1": {
         "role": "Ingeniería de Software",
-        "description": "Semestre 6. Profundizando conocimientos en arquitectura de software, algoritmos, estructuras de datos y diseño de sistemas. Con aspiraciones de cursar una Maestría en Arquitectura de Software."
+        "description": "Semestre 7. Profundizando conocimientos en arquitectura de software, algoritmos, estructuras de datos y diseño de sistemas. Con aspiraciones de cursar una Maestría en Arquitectura de Software."
       },
       "edu-2": {
         "role": "Tecnología en Análisis y Desarrollo de Software",
@@ -72,7 +72,7 @@
       },
       "edu-3": {
         "role": "Técnico en Sistemas",
-        "description": "Certificación técnica que cubre fundamentos de computación, desarrollo web básico, fundamentos de redes y mantenimiento de software."
+        "description": "Certificación técnica que cubre fundamentos de computación, desarrollo web básico, fundamentos de redes y mantenimiento de hardware."
       }
     }
   },
@@ -89,7 +89,7 @@
     "message_placeholder": "Cuéntame sobre tu proyecto o idea...",
     "send": "Enviar Mensaje",
     "available": "Disponible para trabajar",
-    "available_desc": "Abierto a roles de tiempo completo, proyectos freelance y colaboraciones interesantes.",
+    "available_desc": "Abierto a proyectos freelance y colaboraciones interesantes.",
     "find_me": "Encuéntrame en",
     "github_desc": "Ver mi código",
     "linkedin_desc": "Conectemos",
@@ -98,9 +98,12 @@
     "name_error_long": "El nombre debe tener menos de 50 caracteres",
     "email_error_invalid": "Dirección de correo inválida",
     "message_error_short": "El mensaje debe tener al menos 10 caracteres",
-    "message_error_long": "El mensaje debe tener menos de 1000 caracteres"
+    "message_error_long": "El mensaje debe tener menos de 1000 caracteres",
+    "submit_error": "Algo salió mal al enviar tu mensaje. Por favor intenta de nuevo en un momento.",
+    "submit_error_rate_limited": "Has enviado demasiados mensajes recientemente. Intenta de nuevo más tarde.",
+    "already_sent": "Ya enviaste un mensaje desde este navegador — te responderé pronto. Si es urgente, puedes escribirme directo a mi correo."
   },
   "footer": {
-    "built": "Diseñado y construido con cuidado."
+    "built": "Diseñado y construido con amor."
   }
 }

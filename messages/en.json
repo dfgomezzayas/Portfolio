@@ -64,7 +64,7 @@
       },
       "edu-1": {
         "role": "Software Engineering",
-        "description": "6th semester. Deepening knowledge in software architecture, algorithms, data structures and systems design. Aspiring to pursue a Master's in Software Architecture."
+        "description": "7th semester. Deepening knowledge in software architecture, algorithms, data structures and systems design. Aspiring to pursue a Master's in Software Architecture."
       },
       "edu-2": {
         "role": "Technology in Software Analysis and Development",
@@ -72,7 +72,7 @@
       },
       "edu-3": {
         "role": "Technical Program in Systems",
-        "description": "Technical certification covering computer fundamentals, web development basics, networking essentials and software maintenance."
+        "description": "Technical certification covering computer fundamentals, web development basics, networking essentials and hardware maintenance."
       }
     }
   },
@@ -89,7 +89,7 @@
     "message_placeholder": "Tell me about your project or idea...",
     "send": "Send Message",
     "available": "Available for work",
-    "available_desc": "Currently open to full-time roles, freelance projects and interesting collaborations.",
+    "available_desc": "Currently open to freelance projects and interesting collaborations.",
     "find_me": "Find me on",
     "github_desc": "See my code",
     "linkedin_desc": "Let's connect",
@@ -98,9 +98,12 @@
     "name_error_long": "Name must be less than 50 characters",
     "email_error_invalid": "Invalid email address",
     "message_error_short": "Message must be at least 10 characters",
-    "message_error_long": "Message must be less than 1000 characters"
+    "message_error_long": "Message must be less than 1000 characters",
+    "submit_error": "Something went wrong while sending your message. Please try again in a moment.",
+    "submit_error_rate_limited": "You've sent too many messages recently. Please try again later.",
+    "already_sent": "You've already sent a message from this browser — I'll get back to you soon. Feel free to email me directly for anything urgent."
   },
   "footer": {
-    "built": "Designed & built with care."
+    "built": "Designed & built with love."
   }
 }
