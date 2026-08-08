@@ -2,231 +2,23 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { Easing } from "framer-motion";
-import {
-  SiReact,
-  SiNextdotjs,
-  SiTypescript,
-  SiJavascript,
-  SiTailwindcss,
-  SiFramer,
-  SiBootstrap,
-  SiPhp,
-  SiPython,
-  SiFastapi,
-  SiNodedotjs,
-  SiMysql,
-  SiMongodb,
-  SiGit,
-  SiGithub,
-  SiDocker,
-  SiJira,
-} from "react-icons/si";
-import { FiRefreshCw } from "react-icons/fi";
-import { BsDatabaseFill } from "react-icons/bs";
-import { VscVscode, VscAzureDevops } from "react-icons/vsc";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-
-type Category = "all" | "frontend" | "backend" | "database" | "tools";
-
-interface SkillItem {
-  icon: React.ElementType;
-  name: string;
-  category: Exclude<Category, "all">;
-  color: string;
-  bg: string;
-}
-
-const SKILLS: SkillItem[] = [
-  // Frontend
-  {
-    icon: SiReact,
-    name: "React",
-    category: "frontend",
-    color: "text-sky-400",
-    bg: "bg-sky-400/10",
-  },
-  {
-    icon: SiNextdotjs,
-    name: "Next.js",
-    category: "frontend",
-    color: "text-zinc-400",
-    bg: "bg-zinc-400/10",
-  },
-  {
-    icon: SiTypescript,
-    name: "TypeScript",
-    category: "frontend",
-    color: "text-blue-400",
-    bg: "bg-blue-400/10",
-  },
-  {
-    icon: SiJavascript,
-    name: "JavaScript",
-    category: "frontend",
-    color: "text-yellow-400",
-    bg: "bg-yellow-400/10",
-  },
-  {
-    icon: SiTailwindcss,
-    name: "Tailwind CSS",
-    category: "frontend",
-    color: "text-teal-400",
-    bg: "bg-teal-400/10",
-  },
-  {
-    icon: SiFramer,
-    name: "Framer Motion",
-    category: "frontend",
-    color: "text-pink-400",
-    bg: "bg-pink-400/10",
-  },
-  {
-    icon: SiBootstrap,
-    name: "Bootstrap",
-    category: "frontend",
-    color: "text-indigo-300",
-    bg: "bg-indigo-400/10",
-  },
-  // Backend
-  {
-    icon: SiPython,
-    name: "Python",
-    category: "backend",
-    color: "text-blue-400",
-    bg: "bg-blue-400/10",
-  },
-  {
-    icon: SiPhp,
-    name: "PHP",
-    category: "backend",
-    color: "text-indigo-300",
-    bg: "bg-indigo-400/10",
-  },
-  {
-    icon: SiFastapi,
-    name: "FastAPI",
-    category: "backend",
-    color: "text-emerald-400",
-    bg: "bg-emerald-400/10",
-  },
-  {
-    icon: SiNodedotjs,
-    name: "Node.js",
-    category: "backend",
-    color: "text-green-400",
-    bg: "bg-green-400/10",
-  },
-  // Database
-  {
-    icon: SiMongodb,
-    name: "MongoDB",
-    category: "database",
-    color: "text-green-500",
-    bg: "bg-green-500/10",
-  },
-  {
-    icon: BsDatabaseFill,
-    name: "SQL Server",
-    category: "database",
-    color: "text-red-400",
-    bg: "bg-red-400/10",
-  },
-  {
-    icon: SiMysql,
-    name: "MySQL",
-    category: "database",
-    color: "text-indigo-400",
-    bg: "bg-indigo-400/10",
-  },
-  // Tools
-  {
-    icon: SiGit,
-    name: "Git",
-    category: "tools",
-    color: "text-orange-400",
-    bg: "bg-orange-400/10",
-  },
-  {
-    icon: SiGithub,
-    name: "GitHub",
-    category: "tools",
-    color: "text-zinc-300",
-    bg: "bg-zinc-400/10",
-  },
-  {
-    icon: SiDocker,
-    name: "Docker",
-    category: "tools",
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
-  },
-  {
-    icon: VscVscode,
-    name: "VS Code",
-    category: "tools",
-    color: "text-blue-400",
-    bg: "bg-blue-400/10",
-  },
-  {
-    icon: SiJira,
-    name: "Jira",
-    category: "tools",
-    color: "text-blue-600",
-    bg: "bg-blue-600/10",
-  },
-  {
-    icon: FiRefreshCw,
-    name: "Scrum",
-    category: "tools",
-    color: "text-accent-400",
-    bg: "bg-accent-400/10",
-  },
-  {
-    icon: SiPython,
-    name: "SQLAlchemy",
-    category: "tools",
-    color: "text-blue-400",
-    bg: "bg-blue-400/10",
-  },
-  {
-    icon: VscAzureDevops,
-    name: "Azure DevOps",
-    category: "tools",
-    color: "text-blue-400",
-    bg: "bg-blue-400/10",
-  },
-];
-
-type TabKey =
-  | "filter_all"
-  | "filter_frontend"
-  | "filter_backend"
-  | "filter_database"
-  | "filter_tools";
-
-const TABS: { id: Category; key: TabKey }[] = [
-  { id: "all", key: "filter_all" },
-  { id: "frontend", key: "filter_frontend" },
-  { id: "backend", key: "filter_backend" },
-  { id: "database", key: "filter_database" },
-  { id: "tools", key: "filter_tools" },
-];
-
-const EASE: Easing = [0.25, 0.1, 0.25, 1];
+import { skills, skillFilters } from "@/content/skills";
+import type { SkillCategory } from "@/types";
+import { EASE, DURATION, STAGGER } from "@/lib/animations";
 
 export default function Skills() {
-  const [active, setActive] = useState<Category>("all");
+  const [active, setActive] = useState<SkillCategory | "all">("all");
   const t = useTranslations("skills");
 
   const filtered =
-    active === "all" ? SKILLS : SKILLS.filter((s) => s.category === active);
+    active === "all" ? skills : skills.filter((s) => s.category === active);
 
-  const count = (cat: Category) =>
+  const count = (cat: SkillCategory | "all") =>
     cat === "all"
-      ? SKILLS.length
-      : SKILLS.filter((s) => s.category === cat).length;
+      ? skills.length
+      : skills.filter((s) => s.category === cat).length;
 
   return (
     <section
@@ -246,7 +38,7 @@ export default function Skills() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, ease: EASE }}
+          transition={{ duration: DURATION, ease: EASE }}
         >
           {t("label")}
         </motion.p>
@@ -256,7 +48,7 @@ export default function Skills() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, delay: 0.1, ease: EASE }}
+          transition={{ duration: DURATION, delay: STAGGER, ease: EASE }}
         >
           {t("title")}{" "}
           <span className="gradient-text">{t("title_highlight")}</span>
@@ -268,9 +60,9 @@ export default function Skills() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, delay: 0.2, ease: EASE }}
+          transition={{ duration: DURATION, delay: STAGGER * 2, ease: EASE }}
         >
-          {TABS.map((tab) => (
+          {skillFilters.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActive(tab.id)}
@@ -308,7 +100,7 @@ export default function Skills() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, delay: 0.2, ease: EASE }}
+          transition={{ duration: DURATION, delay: STAGGER * 2, ease: EASE }}
           layout
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"
         >
@@ -320,7 +112,7 @@ export default function Skills() {
                 initial={{ opacity: 0, scale: 0.88 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.88 }}
-                transition={{ duration: 0.22, ease: EASE }}
+                transition={{ duration: DURATION, ease: EASE }}
                 whileHover={{ y: -5, scale: 1.04 }}
                 className={cn(
                   "flex flex-col items-center gap-3 px-3 py-5 rounded-2xl cursor-default select-none",

@@ -28,7 +28,7 @@ export default function Up() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
+        transition={{ delay: 0.5 }}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className="fixed bottom-8 right-8 bg-white dark:bg-zinc-900/60 w-10 h-10 flex items-center justify-center rounded-full shadow-lg cursor-pointer border border-zinc-200 dark:border-zinc-700"
       >

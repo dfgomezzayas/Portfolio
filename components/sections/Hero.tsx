@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { FiArrowDown, FiGithub, FiLinkedin } from "react-icons/fi";
+import { heroTechnologies } from "@/content/hero";
+import { EASE, DURATION, STAGGER } from "@/lib/animations";
 
 export default function Hero() {
   const t = useTranslations("hero");
@@ -16,18 +18,10 @@ export default function Hero() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % technologies.length);
+      setIndex((prev) => (prev + 1) % heroTechnologies.length);
     }, 2000);
     return () => clearInterval(interval);
   }, []);
-
-  const technologies = [
-    "React",
-    "JavaScript",
-    "Tailwind CSS",
-    "Python",
-    "FastAPI",
-  ];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -53,7 +47,7 @@ export default function Hero() {
           className="section-label mb-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: DURATION, ease: EASE }}
         >
           {t("greeting")}
         </motion.p>
@@ -63,7 +57,7 @@ export default function Hero() {
           className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-zinc-900 dark:text-white mb-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: DURATION, delay: STAGGER, ease: EASE }}
         >
           Daniel <span className="gradient-text">Gómez</span>
         </motion.h1>
@@ -73,7 +67,7 @@ export default function Hero() {
           className="text-xl sm:text-2xl lg:text-3xl text-zinc-500 dark:text-zinc-400 font-light mb-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: DURATION, delay: STAGGER * 2, ease: EASE }}
         >
           {t("role")}
         </motion.p>
@@ -83,7 +77,7 @@ export default function Hero() {
           className="max-w-xl mx-auto text-base sm:text-lg text-zinc-500 dark:text-zinc-400 mb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: DURATION, delay: STAGGER * 3, ease: EASE }}
         >
           {t("tagline")}{" "}
           <AnimatePresence mode="wait">
@@ -95,7 +89,7 @@ export default function Hero() {
               transition={{ duration: 0.3 }}
               className="text-zinc-700 dark:text-zinc-200 font-medium"
             >
-              {technologies[index]}
+              {heroTechnologies[index]}
             </motion.span>
           </AnimatePresence>
           .
@@ -106,16 +100,16 @@ export default function Hero() {
           className="flex flex-wrap items-center justify-center gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          transition={{ duration: DURATION, delay: STAGGER * 4, ease: EASE }}
         >
-          <motion.button
+          {/* <motion.button
             onClick={() => scrollTo("#projects")}
             className="cursor-pointer px-6 py-3 rounded-xl bg-accent-600 hover:bg-accent-500 text-white font-medium text-sm transition-colors duration-200 glow-accent-sm"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >
             {t("cta_projects")}
-          </motion.button>
+          </motion.button> */}
 
           <motion.button
             onClick={() => scrollTo("#contact")}
@@ -132,7 +126,7 @@ export default function Hero() {
           className="flex items-center justify-center gap-4 mt-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          transition={{ duration: DURATION, delay: STAGGER * 6, ease: EASE }}
         >
           <a
             href="https://github.com/dfgomezzayas"

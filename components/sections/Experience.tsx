@@ -1,13 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { Easing } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { HiBriefcase, HiAcademicCap, HiMapPin } from "react-icons/hi2";
 import { experiences } from "@/content/experience";
 import { cn } from "@/lib/utils";
-
-const EASE: Easing = [0.25, 0.1, 0.25, 1];
+import { EASE, DURATION, STAGGER } from "@/lib/animations";
 
 const workItems = experiences.filter((e) => e.type === "work");
 const eduItems = experiences.filter((e) => e.type === "education");
@@ -33,7 +31,7 @@ function TimelineItem({
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: index * 0.1, ease: EASE }}
+      transition={{ duration: DURATION, delay: index * STAGGER, ease: EASE }}
     >
       {/* Line + dot column */}
       <div className="flex flex-col items-center shrink-0 w-10">
@@ -165,7 +163,7 @@ function Column({
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.4, delay, ease: EASE }}
+        transition={{ duration: DURATION, delay, ease: EASE }}
       >
         {label}
       </motion.p>
@@ -174,7 +172,7 @@ function Column({
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.4, delay: delay + 0.08, ease: EASE }}
+        transition={{ duration: DURATION, delay: delay + STAGGER * 0.8, ease: EASE }}
       >
         {title}
       </motion.h3>
@@ -215,7 +213,7 @@ export default function Experience() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, ease: EASE }}
+          transition={{ duration: DURATION, ease: EASE }}
         >
           {t("label")}
         </motion.p>
@@ -224,7 +222,7 @@ export default function Experience() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, delay: 0.1, ease: EASE }}
+          transition={{ duration: DURATION, delay: STAGGER, ease: EASE }}
         >
           {t("title")}{" "}
           <span className="gradient-text">{t("title_highlight")}</span>
@@ -234,7 +232,7 @@ export default function Experience() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45, delay: 0.18, ease: EASE }}
+          transition={{ duration: DURATION, delay: STAGGER * 2, ease: EASE }}
         >
           {t("subtitle")}
         </motion.p>

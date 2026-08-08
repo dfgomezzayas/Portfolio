@@ -1,67 +1,72 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import type { Easing } from "framer-motion";
-import {
-  FiGithub,
-  FiLinkedin,
-  FiMail,
-  FiSend,
-  FiUser,
-  FiMessageSquare,
-} from "react-icons/fi";
+import { FiSend, FiUser, FiMessageSquare, FiMail } from "react-icons/fi";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { useFormValidation } from "@/hooks/useFormValidation";
+import * as z from "zod";
+import { sendContactEmail } from "@/app/actions/sendEmail";
+import { contactSocialLinks } from "@/content/contact";
+import { fadeUp, STAGGER } from "@/lib/animations";
 
-const EASE: Easing = [0.25, 0.1, 0.25, 1];
-
-const SOCIAL = [
-  {
-    icon: FiGithub,
-    label: "GitHub",
-    href: "https://github.com/dfgomezzayas",
-    descKey: "github_desc",
-    color:
-      "hover:border-zinc-400 dark:hover:border-zinc-500 hover:text-zinc-900 dark:hover:text-white",
-  },
-  {
-    icon: FiLinkedin,
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/daniel-fernando-g%C3%B3mez-zayas-43a049263/",
-    descKey: "linkedin_desc",
-    color: "hover:border-blue-500 hover:text-blue-500",
-  },
-  {
-    icon: FiMail,
-    label: "Email",
-    href: "mailto:you@example.com",
-    descKey: "email_desc",
-    color: "hover:border-accent-500 hover:text-accent-500",
-  },
-] as const;
-
-function fadeUp(delay: number) {
-  return {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true as const },
-    transition: { duration: 0.45, delay, ease: EASE },
-  };
-}
+// Persisted client-side so a page reload can't be used to send another
+// message — this is the actual "one message, ever" UX for real visitors.
+// The server-side rate limit (lib/rate-limit.ts) is the backstop for anyone
+// who bypasses this (clears storage, calls the Server Action directly).
+const ALREADY_SENT_KEY = "contact_form_sent";
 
 export default function Contact() {
   const t = useTranslations("contact");
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [focused, setFocused] = useState<string | null>(null);
+  const [hasSentBefore, setHasSentBefore] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  useEffect(() => {
+    // localStorage doesn't exist during SSR, so this can only be read
+    // client-side after mount — the standard reason this pattern needs an
+    // effect at all.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHasSentBefore(localStorage.getItem(ALREADY_SENT_KEY) === "true");
+  }, []);
+
+  const userSchema = z.object({
+    name: z
+      .string()
+      .min(2, t("name_error_short"))
+      .max(50, t("name_error_long")),
+    email: z.email(t("email_error_invalid")),
+    message: z
+      .string()
+      .min(10, t("message_error_short"))
+      .max(1000, t("message_error_long")),
+    // Honeypot: hidden from real users, only bots fill every input they find.
+    company: z.string().optional(),
+  });
+
+  const {
+    formState,
+    errors,
+    focused,
+    isSubmitting,
+    submitted,
+    submitError,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setFocused,
+  } = useFormValidation({
+    schema: userSchema,
+    initialValues: { name: "", email: "", message: "", company: "" },
+    onSubmit: async (data) => {
+      if (hasSentBefore) return;
+      const result = await sendContactEmail(data);
+      if (!result.success) throw new Error(result.error);
+    },
+    onSubmitSuccess: () => {
+      localStorage.setItem(ALREADY_SENT_KEY, "true");
+      setHasSentBefore(true);
+    },
+  });
 
   return (
     <section
@@ -84,11 +89,11 @@ export default function Contact() {
           <motion.p className="section-label mb-3" {...fadeUp(0)}>
             {t("label")}
           </motion.p>
-          <motion.h2 className="section-title mb-4" {...fadeUp(0.1)}>
+          <motion.h2 className="section-title mb-4" {...fadeUp(STAGGER)}>
             {t("title")}{" "}
             <span className="gradient-text">{t("title_highlight")}</span>
           </motion.h2>
-          <motion.p className="section-subtitle" {...fadeUp(0.18)}>
+          <motion.p className="section-subtitle" {...fadeUp(STAGGER * 2)}>
             {t("subtitle")}
           </motion.p>
         </div>
@@ -97,11 +102,19 @@ export default function Contact() {
         <div className="grid lg:grid-cols-5 gap-10 lg:gap-14 items-start max-w-5xl mx-auto">
           {/* Left — form (3 cols) */}
           <motion.div className="lg:col-span-3" {...fadeUp(0.25)}>
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="space-y-4"
-              noValidate
-            >
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              {/* Honeypot — hidden from real users, catches basic bots */}
+              <input
+                type="text"
+                name="company"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[9999px] w-px h-px opacity-0"
+                value={formState.company}
+                onChange={handleChange}
+              />
+
               {/* Name */}
               <div className="relative">
                 <label
@@ -114,9 +127,11 @@ export default function Contact() {
                   <FiUser
                     className={cn(
                       "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200",
-                      focused === "name"
-                        ? "text-accent-500"
-                        : "text-zinc-400 dark:text-zinc-500",
+                      errors.name
+                        ? "text-red-500"
+                        : focused === "name"
+                          ? "text-accent-500"
+                          : "text-zinc-400 dark:text-zinc-500",
                     )}
                   />
                   <input
@@ -128,18 +143,25 @@ export default function Contact() {
                     value={formState.name}
                     onChange={handleChange}
                     onFocus={() => setFocused("name")}
-                    onBlur={() => setFocused(null)}
+                    onBlur={handleBlur}
                     className={cn(
                       "w-full pl-11 pr-4 py-3 rounded-xl text-sm outline-none transition-all duration-200",
                       "bg-zinc-50 dark:bg-zinc-900/60",
                       "text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600",
                       "border",
-                      focused === "name"
-                        ? "border-accent-500 shadow-sm shadow-accent-500/20"
-                        : "border-zinc-200/60 dark:border-zinc-800/60",
+                      errors.name
+                        ? "border-red-500 shadow-sm shadow-red-500/20"
+                        : focused === "name"
+                          ? "border-accent-500 shadow-sm shadow-accent-500/20"
+                          : "border-zinc-200/60 dark:border-zinc-800/60",
                     )}
                   />
                 </div>
+                {errors.name && (
+                  <p className="text-xs text-red-500 mt-1.5 ml-1">
+                    {errors.name}
+                  </p>
+                )}
               </div>
 
               {/* Email */}
@@ -154,9 +176,11 @@ export default function Contact() {
                   <FiMail
                     className={cn(
                       "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200",
-                      focused === "email"
-                        ? "text-accent-500"
-                        : "text-zinc-400 dark:text-zinc-500",
+                      errors.email
+                        ? "text-red-500"
+                        : focused === "email"
+                          ? "text-accent-500"
+                          : "text-zinc-400 dark:text-zinc-500",
                     )}
                   />
                   <input
@@ -168,18 +192,25 @@ export default function Contact() {
                     value={formState.email}
                     onChange={handleChange}
                     onFocus={() => setFocused("email")}
-                    onBlur={() => setFocused(null)}
+                    onBlur={handleBlur}
                     className={cn(
                       "w-full pl-11 pr-4 py-3 rounded-xl text-sm outline-none transition-all duration-200",
                       "bg-zinc-50 dark:bg-zinc-900/60",
                       "text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600",
                       "border",
-                      focused === "email"
-                        ? "border-accent-500 shadow-sm shadow-accent-500/20"
-                        : "border-zinc-200/60 dark:border-zinc-800/60",
+                      errors.email
+                        ? "border-red-500 shadow-sm shadow-red-500/20"
+                        : focused === "email"
+                          ? "border-accent-500 shadow-sm shadow-accent-500/20"
+                          : "border-zinc-200/60 dark:border-zinc-800/60",
                     )}
                   />
                 </div>
+                {errors.email && (
+                  <p className="text-xs text-red-500 mt-1.5 ml-1">
+                    {errors.email}
+                  </p>
+                )}
               </div>
 
               {/* Message */}
@@ -194,9 +225,11 @@ export default function Contact() {
                   <FiMessageSquare
                     className={cn(
                       "absolute left-4 top-4 w-4 h-4 transition-colors duration-200",
-                      focused === "message"
-                        ? "text-accent-500"
-                        : "text-zinc-400 dark:text-zinc-500",
+                      errors.message
+                        ? "text-red-500"
+                        : focused === "message"
+                          ? "text-accent-500"
+                          : "text-zinc-400 dark:text-zinc-500",
                     )}
                   />
                   <textarea
@@ -207,30 +240,109 @@ export default function Contact() {
                     value={formState.message}
                     onChange={handleChange}
                     onFocus={() => setFocused("message")}
-                    onBlur={() => setFocused(null)}
+                    onBlur={handleBlur}
                     className={cn(
                       "w-full pl-11 pr-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 resize-none",
                       "bg-zinc-50 dark:bg-zinc-900/60",
                       "text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600",
                       "border",
-                      focused === "message"
-                        ? "border-accent-500 shadow-sm shadow-accent-500/20"
-                        : "border-zinc-200/60 dark:border-zinc-800/60",
+                      errors.message
+                        ? "border-red-500 shadow-sm shadow-red-500/20"
+                        : focused === "message"
+                          ? "border-accent-500 shadow-sm shadow-accent-500/20"
+                          : "border-zinc-200/60 dark:border-zinc-800/60",
                     )}
                   />
                 </div>
+                {errors.message && (
+                  <p className="text-xs text-red-500 mt-1.5 ml-1">
+                    {errors.message}
+                  </p>
+                )}
               </div>
 
               {/* Submit */}
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                className="cursor-pointer w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-accent-600 hover:bg-accent-500 text-white font-medium text-sm transition-colors duration-200 glow-accent-sm"
+                disabled={
+                  hasSentBefore || isSubmitting || Object.keys(errors).length > 0
+                }
+                whileHover={
+                  !hasSentBefore && !isSubmitting && Object.keys(errors).length === 0
+                    ? { scale: 1.02 }
+                    : {}
+                }
+                whileTap={
+                  !hasSentBefore && !isSubmitting && Object.keys(errors).length === 0
+                    ? { scale: 0.97 }
+                    : {}
+                }
+                className={cn(
+                  "cursor-pointer w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-white font-medium text-sm transition-all duration-200",
+                  hasSentBefore || isSubmitting || Object.keys(errors).length > 0
+                    ? "bg-zinc-400 dark:bg-zinc-700 cursor-not-allowed opacity-60"
+                    : "bg-accent-600 hover:bg-accent-500 glow-accent-sm",
+                )}
               >
-                <FiSend className="w-4 h-4" />
-                {t("send")}
+                {submitted ? (
+                  <>
+                    <svg
+                      className="w-4 h-4"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    Sent!
+                  </>
+                ) : isSubmitting ? (
+                  <>
+                    <svg
+                      className="w-4 h-4 animate-spin"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <FiSend className="w-4 h-4" />
+                    {t("send")}
+                  </>
+                )}
               </motion.button>
+
+              {submitError && (
+                <p className="text-xs text-red-500 text-center" role="alert">
+                  {submitError === "rate_limited"
+                    ? t("submit_error_rate_limited")
+                    : t("submit_error")}
+                </p>
+              )}
+
+              {hasSentBefore && !submitted && (
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 text-center">
+                  {t("already_sent")}
+                </p>
+              )}
             </form>
           </motion.div>
 
@@ -257,7 +369,8 @@ export default function Contact() {
               <p className="text-xs font-mono text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
                 {t("find_me")}
               </p>
-              {SOCIAL.map(({ icon: Icon, label, href, descKey, color }) => (
+              {contactSocialLinks.map(
+                ({ icon: Icon, label, href, descKey, color }) => (
                 <motion.a
                   key={label}
                   href={href}

@@ -6,13 +6,8 @@ import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiChevronDown } from "react-icons/hi2";
 import { cn } from "@/lib/utils";
-
-type Locale = "en" | "es";
-
-const LANGUAGES: { code: Locale; label: string; flag: string }[] = [
-  { code: "en", label: "English", flag: "🇺🇸" },
-  { code: "es", label: "Español", flag: "🇨🇴" },
-];
+import { languages } from "@/content/languages";
+import type { Locale } from "@/types";
 
 export default function LanguageSwitcher() {
   const locale = useLocale() as Locale;
@@ -22,7 +17,7 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const current = LANGUAGES.find((l) => l.code === locale) ?? LANGUAGES[0];
+  const current = languages.find((l) => l.code === locale) ?? languages[0];
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -52,7 +47,7 @@ export default function LanguageSwitcher() {
         aria-expanded={open}
         aria-haspopup="listbox"
         className={cn(
-          "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-200",
+          "cursor-pointer flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-200",
           "text-zinc-500 dark:text-zinc-400",
           "hover:text-zinc-900 dark:hover:text-zinc-100",
           "hover:bg-zinc-100 dark:hover:bg-zinc-800/60",
@@ -90,7 +85,7 @@ export default function LanguageSwitcher() {
               "shadow-lg shadow-black/10 dark:shadow-black/30",
             )}
           >
-            {LANGUAGES.map((lang) => {
+            {languages.map((lang) => {
               const isActive = lang.code === locale;
               return (
                 <li key={lang.code}>
@@ -99,7 +94,7 @@ export default function LanguageSwitcher() {
                     aria-selected={isActive}
                     onClick={() => switchLang(lang.code)}
                     className={cn(
-                      "w-full flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors duration-150",
+                      "cursor-pointer w-full flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors duration-150",
                       isActive
                         ? "text-accent-500 bg-accent-500/5 font-medium"
                         : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100",

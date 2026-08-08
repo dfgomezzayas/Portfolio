@@ -3,41 +3,9 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import {
-  SiReact,
-  SiTailwindcss,
-  SiPython,
-  SiFastapi,
-  SiJavascript,
-} from "react-icons/si";
-import { BsDatabaseFill } from "react-icons/bs";
-import { FiCode, FiLayers, FiZap } from "react-icons/fi";
-import type { Easing } from "framer-motion";
 import { cn } from "@/lib/utils";
-
-const EASE: Easing = "easeOut";
-
-const CORE_TECH = [
-  { icon: SiReact, label: "React", color: "text-sky-400" },
-  { icon: SiJavascript, label: "JavaScript", color: "text-yellow-400" },
-  { icon: SiTailwindcss, label: "Tailwind CSS", color: "text-teal-400" },
-  { icon: SiPython, label: "Python", color: "text-blue-400" },
-  { icon: SiFastapi, label: "FastAPI", color: "text-emerald-400" },
-  { icon: BsDatabaseFill, label: "SQL Server", color: "text-green-400" },
-] as const;
-
-const PILLARS = [
-  { icon: FiCode, key: "clean" },
-  { icon: FiLayers, key: "ownership" },
-  { icon: FiZap, key: "perf" },
-] as const;
-
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true as const },
-  transition: { duration: 0.5, delay, ease: EASE },
-});
+import { coreTech, pillars } from "@/content/about";
+import { fadeUp, DURATION, EASE } from "@/lib/animations";
 
 export default function About() {
   const t = useTranslations("about");
@@ -103,7 +71,7 @@ export default function About() {
               className="grid sm:grid-cols-3 gap-4 pt-4"
               {...fadeUp(0.5)}
             >
-              {PILLARS.map(({ icon: Icon, key }) => (
+              {pillars.map(({ icon: Icon, key }) => (
                 <div
                   key={key}
                   className={cn(
@@ -169,7 +137,7 @@ export default function About() {
             </p>
 
             <div className="grid grid-cols-2 gap-3">
-              {CORE_TECH.map(({ icon: Icon, label, color }, i) => (
+              {coreTech.map(({ icon: Icon, label, color }, i) => (
                 <motion.div
                   key={label}
                   className={cn(
@@ -182,7 +150,7 @@ export default function About() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.3 + i * 0.06 }}
+                  transition={{ duration: DURATION, delay: 0.3 + i * 0.06, ease: EASE }}
                   whileHover={{ y: -2 }}
                 >
                   <Icon
